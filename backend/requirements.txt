@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+httpx
+anthropic
+chromadb
+sentence-transformers
+scikit-learn
+umap-learn
+streamlit
