@@ -11,7 +11,7 @@ research-paper-scout/
 │   ├── semantic_scholar.py     # Phase 1: fetching papers
 │   ├── embeddings.py           # Phase 2: embedding + ChromaDB
 │   ├── clustering.py           # Phase 3: clustering + labeling
-│   ├── synthesis.py            # Phase 4: RAG + Claude calls
+│   ├── synthesis.py            # Phase 4: RAG + Gemini calls
 │   ├── models.py               # Pydantic schemas for requests/responses
 │   ├── requirements.txt
 │   └── .env                    # API keys (never commit this)
@@ -24,24 +24,35 @@ research-paper-scout/
 ## Setup
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate          # Windows; use `source .venv/bin/activate` elsewhere
+python -m venv backend/venv
+backend\venv\Scripts\activate
 pip install -r backend/requirements.txt
 ```
+
+Build the venv from a standard CPython (python.org or the Microsoft Store), not
+MSYS2/UCRT64 Python. PyPI publishes no wheels for the MSYS2 ABI, so `chromadb`
+falls back to a Rust source build and `torch` has nothing to install at all.
 
 Fill in `backend/.env` with your keys:
 
 ```
-ANTHROPIC_API_KEY=...
+GEMINI_API_KEY=...
 SEMANTIC_SCHOLAR_API_KEY=...
 ```
 
+`SEMANTIC_SCHOLAR_API_KEY` is optional — every endpoint used works without it —
+but the unauthenticated rate limit is aggressive enough that 429s are routine
+even from an idle client, so a [free key](https://www.semanticscholar.org/product/api#api-key-form)
+is worth requesting.
+
 ## Running
 
-Backend:
+Backend — run from inside `backend/`, since the modules import each other by
+plain name (`from synthesis import generate_text`):
 
 ```bash
-uvicorn backend.main:app --reload
+cd backend
+uvicorn main:app --reload
 ```
 
 Frontend:
@@ -49,3 +60,7 @@ Frontend:
 ```bash
 streamlit run frontend/app.py
 ```
+
+## Attribution
+
+Paper data provided by [Semantic Scholar](https://www.semanticscholar.org/).

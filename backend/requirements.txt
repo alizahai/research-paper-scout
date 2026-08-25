@@ -3,9 +3,10 @@ uvicorn[standard]
 pydantic
 python-dotenv
 httpx
-anthropic
-chromadb
+google-genai
+chromadb>=1.0
 sentence-transformers
 scikit-learn
 umap-learn
 streamlit
+requests
